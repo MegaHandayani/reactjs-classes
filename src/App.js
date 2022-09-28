@@ -1,69 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.scss";
+import { useState, useEffect, useReducer } from "react";
+import { ThemeContext, theme } from "./utils/contexts/theme-context";
 
-import banner from ".assets/banner.jpg";
-import articleImg1 from ".assets/img_1.jpg";
-import articleImg2 from ".assets/img_2.jpg";
-import img1 from ".assets/img_4.jpg";
-import img2 from ".assets/img_5.jpg";
-import img3 from ".assets/img_6.jpg";
-import img4 from ".assets/img_7.jpg";
+import Banner from "./components/Banner";
+import Article1 from "./components/Article1";
+import Article2 from "./components/Article2";
+import Horizontal from "./components/Horizontal";
+import Newsletter from "./components/Newsletter";
 
-function App() {
+import banner from "./assets/banner.jpg";
+import articleImg1 from "./assets/img_2.png";
+import articleImg2 from "./assets/img_1.png";
+import img1 from "./assets/img_4.png";
+import img2 from "./assets/img_5.png";
+import img3 from "./assets/img_6.png";
+import img4 from "./assets/img_7.png";
+import { initialState, showArticleReducer } from "./store/reducers";
+
+const App = () => {
+  // const [showArticle, setShowArticle] = useState(true);
+  const [themeId, setThemeId] = useState("light");
+  const [state, dispatch] = useReducer(showArticleReducer, initialState);
+
+  const greeting = () => {
+    // setShowArticle(showArticle ? false : true);
+    // setThemeId(themeId === "light" ? "dark" : "light");
+    dispatch({ type: `${state}` });
+  };
+
+  useEffect(() => {
+    // console.log("showArticle has changed to", state);
+  }, [state]);
+
   return (
-    <div className="App">
-      <div id="banner">
-        <img src={banner} className="image"/>
+    <ThemeContext.Provider value={theme[themeId]}>
+      <div className="App">
+        <Banner img={banner} />
+        <Article1 img={articleImg1} state={state} />
+        {state && <Article2 img={articleImg2} />}
+        <Horizontal imgs={[img1, img2, img3, img4, img1]} />
+        <Newsletter greetingFn={greeting} />
       </div>
-      <div className="article">
-      <div>
-          <img scr={articleImg1} className="image" />
-      </div>
-        <div>
-          <p>Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s, when an unknown printer took a galley of type and
-          scrambled it to make a type specimen book. It has survived not only
-          five centuries, but also the leap into electronic typesetting,
-          remaining essentially unchanged. It was popularised in the 1960s with
-          the release of Letraset sheets containing Lorem Ipsum passages, and
-          more recently with desktop publishing software like Aldus PageMaker
-          including versions of Lorem Ipsum.</p>
-        </div>
-      </div>
-      <div className="article">
-        <div>
-          <p>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text ever
-            since the 1500s, when an unknown printer took a galley of type and
-            scrambled it to make a type specimen book. It has survived not only
-            five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s with
-            the release of Letraset sheets containing Lorem Ipsum passages, and
-            more recently with desktop publishing software like Aldus PageMaker
-            including versions of Lorem Ipsum.
-            <br/>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text ever
-            since the 1500s, when an unknown printer took a galley of type and
-            scrambled it to make a type specimen book. It has survived not only
-            five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s with
-            the release of Letraset sheets containing Lorem Ipsum passages, and
-            more recently with desktop publishing software like Aldus PageMaker
-            including versions of Lorem Ipsum.
-          </p>
-        </div>
-          <div>
-            <img scr={articleImg2} className="image " />
-          </div>
-        </div>
-      <div className="article"></div>
-      <div id="horizontal"></div>
-      <div id="newsletter"></div>
-    </div>
+    </ThemeContext.Provider>
   );
-}
+};
 
 export default App;
